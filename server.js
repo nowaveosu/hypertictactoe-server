@@ -28,7 +28,14 @@ io.on("connection", (socket) => {
         }
         rooms[roomName].players.push(socket.id);  
         io.to(roomName).emit("gameState", rooms[roomName]);  
+        io.to(roomName).emit("roomCountUpdate", roomName, rooms[roomName].players.length);
     });
+
+
+    socket.on("updateRoomCount", (roomName) => { 
+        io.to(roomName).emit("roomCountUpdate", roomName, rooms[roomName].players.length);
+    });
+
 
     socket.on("message", (message, roomName) => {
         console.log("sending message", message, roomName);
@@ -75,7 +82,7 @@ io.on("connection", (socket) => {
             }
         }
     });
-    
+
 
     socket.on("playRPS", (choice, roomName) => { 
         let room = rooms[roomName];
