@@ -10,6 +10,14 @@ let rooms = {};
 io.on("connection", (socket) => {
     console.log("A user connected.");
 
+    socket.on("getInitialRoomCounts", () => {
+        const initialRoomCounts = {};
+        for (const roomName in rooms) {
+            initialRoomCounts[roomName] = rooms[roomName].players.length;
+        }
+        socket.emit("initialRoomCounts", initialRoomCounts);
+    });
+
     socket.on("joinRoom", (roomName) => {    
         console.log("joining room: " + roomName);
         socket.join(roomName);       
@@ -29,7 +37,7 @@ io.on("connection", (socket) => {
         rooms[roomName].players.push(socket.id);  
         io.to(roomName).emit("gameState", rooms[roomName]);  
     });
-    
+
 
     socket.on("message", (message, roomName) => {
         console.log("sending message", message, roomName);
