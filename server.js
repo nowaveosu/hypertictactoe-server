@@ -36,22 +36,6 @@ io.on("connection", (socket) => {
         }
         rooms[roomName].players.push(socket.id);  
         io.to(roomName).emit("gameState", rooms[roomName]);  
-
-        rooms[roomName].timeout = setTimeout(() => {
-            let room = rooms[roomName];
-            if (room && room.players.length === 2) { 
-                const playerSymbol = room.turn % 2 === 0 ? "X" : "O";
-                const symbolQueue = room.playerSymbolQueues[playerSymbol];
-                if (symbolQueue.length > 0) { 
-                    const oldestIndex = symbolQueue.shift();
-                    room.board[oldestIndex] = null;
-                    room.turn++;
-    
-                    io.to(roomName).emit("gameState", { ...room, oldestIndex });
-                    io.to(roomName).emit("message", `Player ${room.turn % 2 + 1} timed out!`);
-                }
-            }
-        }, 4000);
     });
 
 
@@ -75,7 +59,7 @@ io.on("connection", (socket) => {
                 oldestIndex = symbolQueue.shift();
                 room.board[oldestIndex] = null;
             }
-            clearTimeout(room.timeout); 
+
             room.board[index] = playerSymbol;
             symbolQueue.push(index); 
             room.turn++;
