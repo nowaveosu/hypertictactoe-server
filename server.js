@@ -10,12 +10,12 @@ let rooms = {};
 io.on("connection", (socket) => {
     console.log("A user connected.");
 
-    socket.on("getInitialRoomCounts", () => {
-        const initialRoomCounts = {};
+    socket.on("getRoomCounts", () => {
+        const roomCounts = {};
         for (const roomName in rooms) {
-            initialRoomCounts[roomName] = rooms[roomName].players.length;
+            roomCounts[roomName] = rooms[roomName].players.length;
         }
-        socket.emit("initialRoomCounts", initialRoomCounts);
+        socket.emit("roomCounts", roomCounts);
     });
 
     socket.on("joinRoom", (roomName) => {    
