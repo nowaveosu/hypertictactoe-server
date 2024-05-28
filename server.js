@@ -55,7 +55,7 @@ io.on("connection", (socket) => {
             const playerSymbol = room.turn % 2 === 0 ? "X" : "O";
             const symbolQueue = room.playerSymbolQueues[playerSymbol];
             let oldestIndex = null; 
-            if (symbolQueue.length >= 4) {
+            if (symbolQueue.length >= 3) {
                 oldestIndex = symbolQueue.shift();
                 room.board[oldestIndex] = null;
             }
@@ -66,14 +66,14 @@ io.on("connection", (socket) => {
             io.to(roomName).emit("gameState", { ...room, oldestIndex });
     
             const winningPatterns = [
-                [0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15],
-                [0, 4, 8, 12], [1, 5, 9, 13], [2, 6, 10, 14], [3, 7, 11, 15],
-                [0, 5, 10, 15], [3, 6, 9, 12]
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], 
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], 
+                [0, 4, 8], [2, 4, 6]           
             ];
     
             for (const pattern of winningPatterns) {
-                const [a, b, c, d] = pattern;
-                if (room.board[a] && room.board[a] === room.board[b] && room.board[a] === room.board[c] && room.board[a] === room.board[d]) {
+                const [a, b, c] = pattern;
+                if (room.board[a] && room.board[a] === room.board[b] && room.board[a] === room.board[c]) {
                     const winner = room.players[(room.turn + 1) % 2];
                     const loser = room.players[room.turn % 2];
                     
