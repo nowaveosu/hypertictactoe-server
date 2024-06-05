@@ -8,7 +8,6 @@ const io = require("socket.io")(3000, {
 let rooms = {}; 
 
 io.on("connection", (socket) => {
-    console.log("A user connected.");
 
     socket.on("getRoomCounts", () => {
         const roomCounts = {};
