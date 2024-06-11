@@ -17,7 +17,7 @@ io.on("connection", (socket) => {
         socket.emit("roomCounts", roomCounts);
     });
 
-    socket.on("joinRoom", (roomName, callback) => {    
+    socket.on("joinRoom", (roomName) => {    
         console.log("joining room: " + roomName);
         socket.join(roomName);       
         if (!rooms[roomName]) {      
@@ -35,8 +35,6 @@ io.on("connection", (socket) => {
         }
         rooms[roomName].players.push(socket.id);  
         io.to(roomName).emit("gameState", rooms[roomName]);  
-
-        callback();
     });
 
 
